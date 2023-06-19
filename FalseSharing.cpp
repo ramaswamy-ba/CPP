@@ -36,3 +36,8 @@ int main() {
 
     return 0;
 }
+
+
+//g++ -g -pthread -o false_sharing false_sharing.cpp
+//perf stat -e cache-misses,cache-references,L1-dcache-load-misses,L1-dcache-loads,L1-dcache-stores -o perf_results.txt ./false_sharing
+//Check the output file perf_results.txt for cache miss events. A high number of cache misses may indicate that false sharing occurred.
