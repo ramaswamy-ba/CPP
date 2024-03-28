@@ -156,3 +156,77 @@ int main(int argc, char *argv[])
     std::cout<<dec<<'\n';
     return 0;
 }
+
+/*
+
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <map>
+std::string map = "ABCDEFGHKLMOPSWY";
+std::map<char, int> reverse_map;
+void buildReverseMap()
+{
+    for (int i = 0; i < 16; ++i) 
+        reverse_map[map[i]] = i;
+}
+
+std::vector<uint32_t> map_table(256);
+void generate_map_table() 
+{
+    uint32_t polynomial = 0xEDB88320;
+    for (uint32_t i = 0; i < 256; i++) {
+        uint32_t map = i;
+        for (uint8_t j = 0; j < 8; j++)
+            map = (map >> 1) ^ (-int(map & 1) & polynomial);
+        map_table[i] = map;
+    }
+}
+
+uint32_t calculate_map32(const std::string& data) 
+{
+    uint32_t map = 0xFFFFFFFF;
+    for (char c : data)
+        map = (map >> 8) ^ map_table[(map ^ c) & 0xFF];
+    return map ^ 0xFFFFFFFF;
+}
+
+
+std::string custom_base16_encode(const std::string& input) 
+{
+    std::ostringstream oss;
+    for (char c : input) 
+    {
+        int value = static_cast<int>(static_cast<unsigned char>(c));
+        oss << map[value / 16] << map[value % 16];
+    }
+    return oss.str();
+}
+
+std::string custom_base16_decode(const std::string& input) 
+{
+    if (input.length() % 2 != 0) 
+        throw std::invalid_argument("Invalid base16 string");
+
+    std::string output;
+    for (std::size_t i = 0; i < input.length(); i += 2) 
+    {
+        int high = reverse_map[input[i]];
+        int low = reverse_map[input[i + 1]];
+        char c = static_cast<char>(high * 16 + low);
+        output.push_back(c);
+    }
+    return output;
+}
+
+int main() 
+{
+    buildReverseMap();
+    generate_map_table();
+    std::string str = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@_";
+    std::string encoded = custom_base16_encode(str);
+    std::string decoded = custom_base16_decode(encoded);
+    return 0;
+}
+
+*/
