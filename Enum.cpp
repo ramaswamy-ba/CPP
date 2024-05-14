@@ -7,9 +7,12 @@
 #include <map>
 #include <string>
 
+#define STRINGIFY(x) #x
+#define ENUM_TO_STRING(x) STRINGIFY(x)
+
 #define DECLARE_ENUM(NAME, ...)                                         \
     enum class NAME { __VA_ARGS__, COUNT };                             \
-    const char* NAME##Strings[] = { #__VA_ARGS__ };                     \
+    const char* NAME##Strings[] = { ENUM_TO_STRING((__VA_ARGS__)) };    \
     std::string NAME##_to_string(NAME value)                            \
     {                                                                   \
         return NAME##Strings[static_cast<int>(value)];                  \
