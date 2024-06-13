@@ -68,6 +68,23 @@ auto ThreadPool::enqueue(F&& f, Args&&... args) -> std::future<typename std::res
     condition.notify_one();
     return res;
 }
+// implemented using std::invoke_result_t instead std::result_of_t
+/*
+template<typename Func, typename... Args>
+auto ThreadPool::enqueue_new(Func &&f, Args&&... args) -> std::future<std::invoke_result_t<Func(Args...)>>
+{
+    using result_type = std::invoke_result_t<Func(Args...)>;
+    auto task = std::make_shared<std::packaged_task<result_type()>> ( std::bind(std::forward<Func>(f), std::forward<Args>(args)...));
+    std::future<result_type> res = task->get_future();
+    {
+        std::lock_guard<std::mutex> lock(queue_mutex);
+        if(stop) 
+            throw std::runtime_error("enqueue on stopped ThreadPool");
+        m_tasks.emplace([task]() { (*task)(); } );
+    }
+    condition.notify_one();
+    return res;
+}*/
 // simple job type 
 /*
 void ThreadPool::enqueue(JobType f)  
