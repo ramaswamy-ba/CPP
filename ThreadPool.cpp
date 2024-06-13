@@ -114,7 +114,7 @@ int main() {
     }
 
     std::future<int> result = pool.enqueue(Func, 10, 20);
-    std::osyncstream(std::cout)<<"Func Result "<<result.get()<<'\n';
+    std::osyncstream(std::cout)<<"Func Result "<<result.get(); // <-- This will block until the task is finished
 
     // The ThreadPool will be automatically cleaned up when it goes out of scope
     return 0;
